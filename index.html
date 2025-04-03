@@ -32,6 +32,19 @@
             line-height: 1.6;
         }
         
+        /* Disable text and image selection */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Disable right-click context menu */
+        body {
+            context-menu: none;
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -50,12 +63,26 @@
             gap: 20px;
             flex-wrap: wrap;
             margin: 1rem 0;
+            position: relative;
         }
 
-        /* ONLY ADDED THIS NEW LOGO-RELATED STYLE */
         .agency-logo {
             height: 60px;
             margin-right: 15px;
+            pointer-events: none;
+            position: relative;
+        }
+        
+        /* Add transparent overlay to logo */
+        .agency-logo::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 2;
         }
         
         .agency-title {
@@ -233,11 +260,30 @@
             color: white;
         }
         
-        .prize-image {
+        .prize-image-container {
+            position: relative;
             width: 150px;
             height: 150px;
             margin: 0 auto 1rem;
+        }
+        
+        .prize-image {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            pointer-events: none;
+        }
+        
+        /* Add transparent overlay to prize images */
+        .prize-image-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 2;
         }
         
         .prize-name {
@@ -448,6 +494,7 @@
             cursor: pointer;
             transition: transform 0.3s ease;
             background: transparent;
+            pointer-events: auto; /* Allow clicking on social icons */
         }
         
         .social-icon img {
@@ -478,13 +525,24 @@
         .prize-card.bronze {
             animation-delay: 1s;
         }
+        
+        /* Disable drag and drop for images */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
     <div class="container">
         <header>
             <div class="title-container">
-                <img src="https://i.postimg.cc/Fzw41xPz/KS-Agency-Logo.png" alt="KS Agency Logo" class="agency-logo">
+                <div class="image-protection">
+                    <img src="https://i.postimg.cc/Fzw41xPz/KS-Agency-Logo.png" alt="KS Agency Logo" class="agency-logo">
+                </div>
                 <h1 class="agency-title">KS Agency</h1>
                 <div class="anniversary-badge">1st Anniversary!</div>
             </div>
@@ -502,7 +560,9 @@
                 <!-- 1st Prize -->
                 <div class="prize-card gold">
                     <div class="prize-rank">1st</div>
-                    <img src="https://i.postimg.cc/90Pxc9TG/Boat-Airdopes-141.png" alt="Boat Airdopes 141" class="prize-image">
+                    <div class="prize-image-container">
+                        <img src="https://i.postimg.cc/90Pxc9TG/Boat-Airdopes-141.png" alt="Boat Airdopes 141" class="prize-image">
+                    </div>
                     <h3 class="prize-name">Boat Airdopes 141</h3>
                     <p class="prize-desc">Premium wireless earbuds with 42hrs playback</p>
                 </div>
@@ -510,7 +570,9 @@
                 <!-- 2nd Prize -->
                 <div class="prize-card silver">
                     <div class="prize-rank">2nd</div>
-                    <img src="https://i.postimg.cc/pXLvpgtj/Boat-Airdopes-161.png" alt="Boat Airdopes 161" class="prize-image">
+                    <div class="prize-image-container">
+                        <img src="https://i.postimg.cc/pXLvpgtj/Boat-Airdopes-161.png" alt="Boat Airdopes 161" class="prize-image">
+                    </div>
                     <h3 class="prize-name">Boat Airdopes 161</h3>
                     <p class="prize-desc">Wireless earbuds with 40hrs playback</p>
                 </div>
@@ -518,7 +580,9 @@
                 <!-- 3rd Prize -->
                 <div class="prize-card bronze">
                     <div class="prize-rank">3rd</div>
-                    <img src="https://i.postimg.cc/jSkSxRwC/Boat-Airdopes-131.png" alt="Boat Airdopes 131" class="prize-image">
+                    <div class="prize-image-container">
+                        <img src="https://i.postimg.cc/jSkSxRwC/Boat-Airdopes-131.png" alt="Boat Airdopes 131" class="prize-image">
+                    </div>
                     <h3 class="prize-name">Boat Airdopes 131</h3>
                     <p class="prize-desc">Wireless earbuds with 60hrs playback</p>
                 </div>
@@ -610,5 +674,47 @@
             </a>
         </div>
     </div>
+
+    <script>
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        // Prevent keyboard shortcuts (Ctrl+C, Ctrl+U, etc.)
+        document.addEventListener('keydown', function(e) {
+            // Disable F12 (Developer Tools)
+            if(e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+Shift+I (Developer Tools)
+            if(e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+U (View Source)
+            if(e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+S (Save Page)
+            if(e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Additional protection against drag and drop
+        document.addEventListener('dragstart', function(e) {
+            if(e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
 </body>
 </html>
